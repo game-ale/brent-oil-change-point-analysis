@@ -1,117 +1,150 @@
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from statsmodels.tsa.stattools import adfuller
+import config
+import sys
 
 # Set plot style
 plt.style.use('ggplot')
 
-# Load Data
-try:
-    df = pd.read_csv('Data/BrentOilPrices.csv')
-    print("Data loaded successfully.")
-    print(df.head())
-except FileNotFoundError:
-    print("Error: File not found. Checking alternate path...")
+def load_data(filepath):
+    """Loads the Brent Oil Prices dataset."""
     try:
-        df = pd.read_csv('data/raw/BrentOilPrices.csv')
-        print("Data loaded from data/raw/.")
-    except FileNotFoundError:
-        print("Error: Could not find dataset.")
-        exit()
+        # Try finding the file in typical locations if the specific config path fails
+        if not filepath.exists():
+             # Fallback logic for where the user might have placed it manually in the root 'Data' folder
+             # as observed in previous steps
+             fallback_path = config.PROJECT_ROOT / "Data" / "BrentOilPrices.csv"
+             if fallback_path.exists():
+                 filepath = fallback_path
+             else:
+                 raise FileNotFoundError(f"Dataset not found at {filepath} or {fallback_path}")
 
-# Preprocessing
-# Date format is 'day-month-year' e.g. 20-May-87
-# Using errors='coerce' to handle potential bad data, and infer_datetime_format=True
-df['Date'] = pd.to_datetime(df['Date'], format='%d-%b-%y', errors='coerce')
-df.dropna(subset=['Date'], inplace=True)
-df.set_index('Date', inplace=True)
-df.sort_index(inplace=True)
+        df = pd.read_csv(filepath)
+        print(f"Data loaded successfully from {filepath}")
+        return df
+    except Exception as e:
+        print(f"Error loading data: {e}")
+        sys.exit(1)
 
-# Calculate Log Returns
-df['Log_Returns'] = np.log(df['Price'] / df['Price'].shift(1))
+def preprocess_data(df):
+    """Parses dates and calculates log returns."""
+    try:
+        # Date format parsing
+        df['Date'] = pd.to_datetime(df['Date'], format='%d-%b-%y', errors='coerce')
+        
+        # Check for data quality
+        initial_count = len(df)
+        df.dropna(subset=['Date'], inplace=True)
+        if len(df) < initial_count:
+            print(f"Warning: Dropped {initial_count - len(df)} rows due to invalid dates.")
 
-# --- PLOTTING ---
+        df.set_index('Date', inplace=True)
+        df.sort_index(inplace=True)
 
-# 1. Price History
-plt.figure(figsize=(12, 6))
-plt.plot(df.index, df['Price'], label='Brent Oil Price (USD)')
-plt.title('Brent Oil Prices (1987-2022)')
-plt.xlabel('Date')
-plt.ylabel('Price (USD)')
-plt.legend()
-plt.savefig('docs/images/brent_price_history.png')
-plt.close()
+        # Calculate Log Returns
+        df['Log_Returns'] = np.log(df['Price'] / df['Price'].shift(1))
+        
+        return df
+    except KeyError as e:
+        print(f"Error: Missing expected column {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error during preprocessing: {e}")
+        sys.exit(1)
 
-# 2. Log Returns (Volatility)
-plt.figure(figsize=(12, 6))
-plt.plot(df.index, df['Log_Returns'], label='Log Returns', alpha=0.7)
-plt.title('Brent Oil Price Log Returns (Volatility)')
-plt.xlabel('Date')
-plt.ylabel('Log Return')
-plt.legend()
-plt.savefig('docs/images/brent_log_returns.png')
-plt.close()
+def plot_price_history(df, output_path):
+    """Plots and saves the price history."""
+    plt.figure(figsize=(12, 6))
+    plt.plot(df.index, df['Price'], label='Brent Oil Price (USD)')
+    plt.title('Brent Oil Prices (1987-2022)')
+    plt.xlabel('Date')
+    plt.ylabel('Price (USD)')
+    plt.legend()
+    plt.savefig(output_path)
+    plt.close()
 
-# 3. Rolling Mean & Std Dev
-rolling_mean = df['Price'].rolling(window=365).mean()
-rolling_std = df['Price'].rolling(window=365).std()
+def plot_volatility(df, output_path):
+    """Plots and saves the log returns (volatility)."""
+    plt.figure(figsize=(12, 6))
+    plt.plot(df.index, df['Log_Returns'], label='Log Returns', alpha=0.7)
+    plt.title('Brent Oil Price Log Returns (Volatility)')
+    plt.xlabel('Date')
+    plt.ylabel('Log Return')
+    plt.legend()
+    plt.savefig(output_path)
+    plt.close()
 
-plt.figure(figsize=(12, 6))
-plt.plot(df['Price'], label='Original')
-plt.plot(rolling_mean, label='Rolling Mean (1yr)')
-plt.plot(rolling_std, label='Rolling Std (1yr)')
-plt.title('Rolling Mean & Standard Deviation')
-plt.legend()
-plt.savefig('docs/images/rolling_stats.png')
-plt.close()
+def plot_rolling_stats(df, output_path):
+    """Plots and saves rolling mean and standard deviation."""
+    rolling_mean = df['Price'].rolling(window=365).mean()
+    rolling_std = df['Price'].rolling(window=365).std()
 
-# --- STATISTICAL TESTS ---
+    plt.figure(figsize=(12, 6))
+    plt.plot(df['Price'], label='Original')
+    plt.plot(rolling_mean, label='Rolling Mean (1yr)')
+    plt.plot(rolling_std, label='Rolling Std (1yr)')
+    plt.title('Rolling Mean & Standard Deviation')
+    plt.legend()
+    plt.savefig(output_path)
+    plt.close()
 
-def adf_test(timeseries):
-    print("Results of Dickey-Fuller Test:")
-    dftest = adfuller(timeseries, autolag='AIC')
-    dfoutput = pd.Series(dftest[0:4], index=['Test Statistic', 'p-value', '#Lags Used', 'Number of Observations Used'])
+def perform_adf_test(timeseries):
+    """Performs Augmented Dickey-Fuller test."""
+    dftest = adfuller(timeseries.dropna(), autolag='AIC')
+    results = pd.Series(dftest[0:4], index=['Test Statistic', 'p-value', '#Lags Used', 'Number of Observations Used'])
     for key, value in dftest[4].items():
-        dfoutput['Critical Value (%s)' % key] = value
-    print(dfoutput)
-    return dfoutput
+        results[f'Critical Value ({key})'] = value
+    return results
 
-print("\n--- ADF Test on Prices ---")
-adf_res_price = adf_test(df['Price'].dropna())
+def save_summary(df, price_adf, returns_adf, output_path):
+    """Saves summary statistics and test results to a file."""
+    with open(output_path, 'w') as f:
+        f.write("Brent Oil Prices EDA Summary\n")
+        f.write("============================\n\n")
+        f.write(f"Dataset Range: {df.index.min()} to {df.index.max()}\n")
+        f.write(f"Total Observations: {len(df)}\n\n")
+        
+        f.write("Price Statistics:\n")
+        f.write(df['Price'].describe().to_string())
+        f.write("\n\n")
 
-print("\n--- ADF Test on Log Returns ---")
-adf_res_returns = adf_test(df['Log_Returns'].dropna())
+        f.write("ADF Test - Price (Non-Stationary?):\n")
+        f.write(f"Test Statistic: {price_adf['Test Statistic']:.4f}\n")
+        f.write(f"p-value: {price_adf['p-value']:.4f}\n")
+        f.write(f"Result: {'Likely Non-Stationary' if price_adf['p-value'] > 0.05 else 'Likely Stationary'}\n\n")
 
-# --- SUMMARY STATISTICS ---
-print("\n--- Summary Statistics ---")
-print(df.describe())
+        f.write("ADF Test - Log Returns (Stationary?):\n")
+        f.write(f"Test Statistic: {returns_adf['Test Statistic']:.4f}\n")
+        f.write(f"p-value: {returns_adf['p-value']:.4f}\n")
+        f.write(f"Result: {'Likely Non-Stationary' if returns_adf['p-value'] > 0.05 else 'Likely Stationary'}\n")
 
-# Save summary to file
-with open('docs/eda_summary.txt', 'w') as f:
-    f.write("Brent Oil Prices EDA Summary\n")
-    f.write("============================\n\n")
-    f.write("Dataset Range: {} to {}\n".format(df.index.min(), df.index.max()))
-    f.write("Total Observations: {}\n\n".format(len(df)))
+def main():
+    print("Starting EDA Analysis...")
     
-    f.write("Price Statistics:\n")
-    f.write(df['Price'].describe().to_string())
-    f.write("\n\n")
+    # Load
+    df = load_data(config.BRENT_PRICES_FILE)
+    
+    # Preprocess
+    df = preprocess_data(df)
+    
+    # Plot
+    print("Generating plots...")
+    plot_price_history(df, config.IMAGES_DIR / 'brent_price_history.png')
+    plot_volatility(df, config.IMAGES_DIR / 'brent_log_returns.png')
+    plot_rolling_stats(df, config.IMAGES_DIR / 'rolling_stats.png')
+    
+    # Analysis
+    print("Performing statistical tests...")
+    adf_res_price = perform_adf_test(df['Price'])
+    adf_res_returns = perform_adf_test(df['Log_Returns'])
+    
+    # Save Summary
+    print(f"Saving summary to {config.SUMMARY_FILE}...")
+    save_summary(df, adf_res_price, adf_res_returns, config.SUMMARY_FILE)
+    
+    print("EDA Analysis completed successfully.")
 
-    f.write("ADF Test - Price (Non-Stationary?):\n")
-    f.write(f"Test Statistic: {adf_res_price['Test Statistic']:.4f}\n")
-    f.write(f"p-value: {adf_res_price['p-value']:.4f}\n")
-    if adf_res_price['p-value'] > 0.05:
-        f.write("Result: The time series is likely non-stationary (Unit Root present)\n")
-    else:
-        f.write("Result: The time series is likely stationary\n")
-    f.write("\n")
-
-    f.write("ADF Test - Log Returns (Stationary?):\n")
-    f.write(f"Test Statistic: {adf_res_returns['Test Statistic']:.4f}\n")
-    f.write(f"p-value: {adf_res_returns['p-value']:.4f}\n")
-    if adf_res_returns['p-value'] > 0.05:
-        f.write("Result: The time series is likely non-stationary (Unit Root present)\n")
-    else:
-        f.write("Result: The time series is likely stationary\n")
+if __name__ == "__main__":
+    main()
