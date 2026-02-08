@@ -1,0 +1,4 @@
+event_name,start_date,end_date,category
+Major Supply Disruption,2023-07-10,2023-07-30,supply_shock
+Policy Announcement,2023-04-09,2023-04-14,policy
+Market Correction,2023-09-18,2023-09-25,market

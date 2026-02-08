@@ -1,0 +1,25 @@
+Brent Oil Prices EDA Summary
+============================
+
+Dataset Range: 1987-05-20 00:00:00 to 2020-04-21 00:00:00
+Total Observations: 8360
+
+Price Statistics:
+count    8360.000000
+mean       46.459669
+std        32.504671
+min         9.100000
+25%        18.780000
+50%        31.750000
+75%        67.042500
+max       143.950000
+
+ADF Test - Price (Non-Stationary?):
+Test Statistic: -2.0187
+p-value: 0.2785
+Result: The time series is likely non-stationary (Unit Root present)
+
+ADF Test - Log Returns (Stationary?):
+Test Statistic: -12.6031
+p-value: 0.0000
+Result: The time series is likely stationary
