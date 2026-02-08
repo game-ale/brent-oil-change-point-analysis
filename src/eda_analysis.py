@@ -23,7 +23,9 @@ except FileNotFoundError:
 
 # Preprocessing
 # Date format is 'day-month-year' e.g. 20-May-87
-df['Date'] = pd.to_datetime(df['Date'], format='%d-%b-%y')
+# Using errors='coerce' to handle potential bad data, and infer_datetime_format=True
+df['Date'] = pd.to_datetime(df['Date'], format='%d-%b-%y', errors='coerce')
+df.dropna(subset=['Date'], inplace=True)
 df.set_index('Date', inplace=True)
 df.sort_index(inplace=True)
 
