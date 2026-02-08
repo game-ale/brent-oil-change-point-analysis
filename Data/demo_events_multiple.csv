@@ -1,0 +1,5 @@
+event_name,start_date,end_date,category
+Major Supply Disruption,2023-05-05,2023-05-21,supply_shock
+Geopolitical Crisis,2023-09-14,2023-09-30,geopolitical
+Early Market Adjustment,2023-01-25,2023-01-30,market
+Late Policy Announcement,2023-11-01,2023-11-07,policy
