@@ -17,9 +17,9 @@ max       143.950000
 ADF Test - Price (Non-Stationary?):
 Test Statistic: -2.0187
 p-value: 0.2785
-Result: The time series is likely non-stationary (Unit Root present)
+Result: Likely Non-Stationary
 
 ADF Test - Log Returns (Stationary?):
 Test Statistic: -12.6031
 p-value: 0.0000
-Result: The time series is likely stationary
+Result: Likely Stationary

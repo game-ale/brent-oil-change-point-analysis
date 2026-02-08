@@ -33,7 +33,11 @@ The analysis follows a structured workflow:
 │   └── interim_report.md
 ├── notebooks          # Jupyter notebooks for analysis (eda.ipynb)
 ├── src                # Source code for analysis and modeling
+│   ├── config.py      # Configuration and path management
+│   └── eda_analysis.py# EDA script
 ├── dashboard          # Interactive dashboard (Backend/Frontend)
+├── requirements.txt   # Python dependencies
+├── .gitignore         # Git ignore file
 └── README.md          # Project overview
 ```
 
@@ -42,11 +46,13 @@ The analysis follows a structured workflow:
     -   Workflow and Event Data compiled.
     -   EDA completed (Trend, Volatility, Stationarity confirmed).
     -   Interim Report generated.
+    -   **Code Improvement**: Modularized EDA script and added config.
 -   [ ] **Task 2: Change Point Modeling** (In Progress)
 -   [ ] **Task 3: Dashboard Development**
 
 ## How to Run
-1.  **Environment Setup**: Ensure Python and required libraries are installed.
+1.  **Environment Setup**:
+    -   Install dependencies: `pip install -r requirements.txt`
 2.  **EDA**:
     -   Run the notebook: `jupyter notebook notebooks/eda.ipynb`
     -   Or run the script: `python src/eda_analysis.py`
