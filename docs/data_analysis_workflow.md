@@ -30,13 +30,22 @@
 
 ## 2. Assumptions
 
-- **Market Efficiency**: Prices reflect available information, and major events causes rapid price adjustments.
-- **Structural Breaks**: The data contains discrete shifts in parameters (mean/variance) rather than just continuous evolution.
-- **Independence**: Residuals after accounting for change points are assumed to be independent and identically distributed (i.i.d) for the basic model, though volatility clustering (ARCH/GARCH) is a known feature of financial time series.
+-   **Market Efficiency**: Prices reflect available information, and major events causes rapid price adjustments.
+-   **Structural Breaks**: The data contains discrete shifts in parameters (mean/variance) rather than just continuous evolution.
+-   **Independence**: Residuals after accounting for change points are assumed to be independent and identically distributed (i.i.d) for the basic model, though volatility clustering (ARCH/GARCH) is a known feature of financial time series.
+-   **Data Completeness**: We assume the dataset is complete and accurate for the covered period, and that missing dates correspond to non-trading days.
 
 ## 3. Limitations
 
-- **Correlation vs. Causation**: A detected change point near an event does not prove the event caused the change. Other confounding factors may be present.
-- **Model Simplicity**: The basic change point model assumes a single or fixed number of breaks. Real-world data may have multiple, complex regime changes that a simple model might miss or oversimplify.
-- **Lag Effects**: Market reaction to events might not be instantaneous; there could be anticipation or delayed responses not perfectly aligned with the event date.
-- **Data Quality**: The analysis depends on the accuracy and completeness of the historical price data.
+-   **Correlation vs. Causation**: A detected change point near an event does not prove the event caused the change. Other confounding factors (e.g., hidden economic shifts, simultaneous minor events) may be present. This analysis identifies *association*, not *causality*.
+-   **Model Simplicity**: The basic change point model assumes a single or fixed number of breaks (or a specific process for them). Real-world data may have multiple, complex regime changes that a simple model might miss or oversimplify.
+-   **Lag Effects**: Market reaction to events might not be instantaneous; there could be anticipation (pricing in) or delayed responses not perfectly aligned with the event date.
+-   **Exogenous Factors**: The model focuses on the univariate time series of prices. It does not explicitly account for exogenous variables like production volumes, inventories, or exchange rates, except through their aggregate impact on price.
+
+## 4. Communication Channels
+
+Results will be communicated to stakeholders through the following formats:
+-   **Investor Reports (PDF)**: High-level summaries focusing on key risk events and their quantified impact on portfolio value.
+-   **Policy Briefs (Markdown/PDF)**: Detailed analysis of specific geopolitical events (e.g., sanctions) to inform government policy or strategic planning.
+-   **Interactive Dashboard (Web App)**: A live tool for analysts to explore historical data, filter by event types, and visualize volatility regimes dynamically.
+-   **Technical Documentation (GitHub/Docs)**: Full reproducibility guides, code documentation, and model specifications for the data science team.
