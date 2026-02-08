@@ -34,7 +34,8 @@ The analysis follows a structured workflow:
 ├── notebooks          # Jupyter notebooks for analysis (eda.ipynb)
 ├── src                # Source code for analysis and modeling
 │   ├── config.py      # Configuration and path management
-│   └── eda_analysis.py# EDA script
+│   ├── eda_analysis.py# EDA script (Type-hinted, Modular)
+│   └── test_eda.py    # Unit tests
 ├── dashboard          # Interactive dashboard (Backend/Frontend)
 ├── requirements.txt   # Python dependencies
 ├── .gitignore         # Git ignore file
@@ -46,7 +47,7 @@ The analysis follows a structured workflow:
     -   Workflow and Event Data compiled.
     -   EDA completed (Trend, Volatility, Stationarity confirmed).
     -   Interim Report generated.
-    -   **Code Improvement**: Modularized EDA script and added config.
+    -   **Code Improvement**: Modularized EDA script, added config, type hints, and unit tests.
 -   [ ] **Task 2: Change Point Modeling** (In Progress)
 -   [ ] **Task 3: Dashboard Development**
 
@@ -55,7 +56,5 @@ The analysis follows a structured workflow:
     -   Install dependencies: `pip install -r requirements.txt`
 2.  **EDA**:
     -   Run the notebook: `jupyter notebook notebooks/eda.ipynb`
-    -   Or run the script: `python src/eda_analysis.py`
-
-## Events Data
-A curated list of major geopolitical events affecting oil prices is available in `data/processed/events.csv`.
+    -   Run the script: `python src/eda_analysis.py`
+    -   Run tests: `python src/test_eda.py`
