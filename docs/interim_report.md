@@ -1,52 +1,61 @@
 # Interim Report: Brent Oil Change Point Analysis
+**Date**: February 8, 2026 | **Author**: Data Science Team | **Version**: 1.1
 
-## 1. Introduction
-The objective of this project is to analyze the impact of major political and economic events on Brent oil prices from 1987 to 2022. By employing Bayesian Change Point detection, we aim to identify structural breaks in price trends and quantify the effect of these events. This report outlines the foundational work completed in Task 1, including the analysis workflow, event compilation, and initial exploratory data analysis (EDA).
+## Executive Summary
+This report summarizes the foundational analysis of Brent oil prices (1987-2020) to identify structural breaks caused by geopolitical events. We confirmed the non-stationarity of prices, compiled a dataset of 14 key events, and validated the need for Bayesian Change Point modeling.
 
-## 2. Data Analysis Workflow
-The analysis follows a structured five-step workflow:
-1.  **Data Collection & Preprocessing**: Loading historical price data and calculating log returns to stabilize variance.
-2.  **Exploratory Data Analysis (EDA)**: Investigating trends, seasonality, and stationarity.
-3.  **Bayesian Change Point Modeling**: Using PyMC to detect structural breaks.
-4.  **Event Association**: Correlating detected change points with geopolitical events.
-5.  **Dashboard Development**: Visualizing results via an interactive Flask/React application.
+## 1. Project Objectives
+-   **Analyze** the impact of major political/economic events on Brent oil prices.
+-   **Quantify** price level and volatility shifts using Bayesian inference.
+-   **Visualize** insights via an interactive dashboard for stakeholders.
 
-Detailed documentation is available in `docs/data_analysis_workflow.md`.
+## 2. Completed Work (Task 1)
 
-## 3. Key Events
-A dataset of major geopolitical and economic events affecting the oil market has been compiled. Key events include:
--   **1990**: Gulf War (Iraq invades Kuwait)
--   **2001**: 9/11 Terrorist Attacks
--   **2008**: Global Financial Crisis
--   **2014**: Oil Price Crash (Supply glut)
--   **2020**: COVID-19 Pandemic & Russia-Saudi Price War
--   **2022**: Russia-Ukraine War
+### 2.1 Data & Event Compilation
+-   **Price Data**: 8,360 daily observations (May 1987 – April 2020). *Note: Data ends in 2020, excluding the 2022 Russia-Ukraine war.*
+-   **Events**: Compiled 14 major events including the Gulf War (1990), 2008 Financial Crisis, and COVID-19 Pandemic. (See `data/processed/events.csv`)
 
-The full list is available in `data/processed/events.csv`.
+### 2.2 Exploratory Data Analysis (EDA) Findings
+**Finding 1: Regime Changes & Non-Stationarity**
+The price series exhibits distinct regimes with sharp structural breaks, confirmed by the ADF test (p-value 0.28 > 0.05, fail to reject null).
+![Price History](images/brent_price_history.png)
 
-## 4. Exploratory Data Analysis (EDA) Findings
+**Finding 2: Volatility Clustering**
+Log returns are stationary (p-value 0.00) but show clusters of high volatility during crisis periods (1991, 2008, 2014, 2020).
+![Volatility](images/brent_log_returns.png)
 
-### Data Overview
--   **Range**: 20-May-1987 to 21-Apr-2020
-    -   *Note*: The provided dataset ends in April 2020, while the project scope references September 2022. This limitation restricts analysis of the post-2020 recovery and the 2022 Russia-Ukraine war onset.
--   **Observation Count**: 8,360 daily records.
+**Finding 3: Rolling Statistics**
+Rolling mean and standard deviation visualizes the changing baseline and risk profile over time.
+![Rolling Stats](images/rolling_stats.png)
 
-### Price Trends & Volatility
--   **Price**: The time series shows significant non-stationarity with visible trends and structural breaks (e.g., 2008 spike, 2014 crash, 2020 collapse).
--   **Volatility**: Log returns oscillate around zero but exhibit "volatility clustering," where periods of high volatility (large price swings) cluster together, particularly during crises (1991, 2008, 2014, 2020).
+## 3. Methodology & Next Steps
 
-### Statistical Tests (ADF)
--   **Brent Oil Price**:
-    -   Test Statistic: -2.0187 (p-value: 0.2785)
-    -   **Result**: Fail to reject null hypothesis. The price series is **Non-Stationary**.
--   **Log Returns**:
-    -   Test Statistic: -12.6031 (p-value: 0.0000)
-    -   **Result**: Reject null hypothesis. The returns series is **Stationary**.
+### 3.1 Algorithm Selection
+We selected **Bayesian Change Point Detection (PyMC)** because it:
+1.  Explicitly models discrete shifts in mean and variance (unlike ARIMA).
+2.  Provides probabilistic uncertainty estimates for change point dates.
+3.  Handles the non-stationary nature of the data naturally.
 
-### Implications for Modeling
-Since the raw price series is non-stationary, standard regression models may yield spurious results. The proposed Bayesian Change Point model is appropriate as it explicitly models the structural breaks (changes in mean/variance) that cause non-stationarity.
+### 3.2 Roadmap
 
-## 5. Next Steps
--   **Task 2**: Implement the Bayesian Change Point model in PyMC to detect the exact dates of structural breaks.
--   **Task 3**: specific focus on the 2020 crash given the data limit, or request updated data to cover 2022.
--   **Dashboard**: Begin backend API development.
+#### Task 2: Change Point Modeling (Immediate Focus)
+-   [ ] Implement PyMC model with switch point (`tau`) priors.
+-   [ ] Run MCMC sampling to detect break dates.
+-   [ ] Quantify % impact on price mean/volatility pre- and post-event.
+
+#### Task 3: Dashboard Development (Future Work)
+-   [ ] **Backend (Flask)**:
+    -   API `/api/price-data`: Serve historical data.
+    -   API `/api/change-points`: Serve detected break dates and statistics.
+-   [ ] **Frontend (React)**:
+    -   **Interactive Chart**: Recharts/Chart.js line chart with zoom and pan.
+    -   **Event Overlay**: vertical markers for events and detected changes.
+    -   **Analysis Panel**: Display selected event statistics (magnitude, duration).
+
+## 4. Assumptions & Limitations
+-   **Correlation ≠ Causation**: Detected breaks indicate association, not causality.
+-   **Data Limit**: Analysis is restricted to pre-April 2020 data.
+-   **Market Efficiency**: Prices are assumed to react rapidly to major news.
+
+---
+**Repository**: `c:\weak11\brent-oil-change-point-analysis` | **Contact**: Data Science Team

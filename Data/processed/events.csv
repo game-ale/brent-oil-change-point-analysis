@@ -1,16 +1,16 @@
 Event,Date,Description,Type
-Gulf War,1990-08-02,Iraq invades Kuwait, triggering a sharp rise in oil prices.,Conflict
-Asian Financial Crisis,1997-07-02,Thailand floats the baht, starting a crisis that reduced Asian demand for oil.,Economic
-9/11 Attacks,2001-09-11,Terrorist attacks in the US causing global uncertainty and market volatility.,Terrorism
-Venezuelan Oil Strike,2002-12-02,General strike in Venezuela halts oil exports.,Political
-US Invasion of Iraq,2003-03-20,Start of the Iraq War, creating supply concerns.,Conflict
-Global Financial Crisis,2008-09-15,Lehman Brothers bankruptcy; demand collapse leads to price crash.,Economic
-Arab Spring,2010-12-17,Uprisings in North Africa and Middle East affect stability.,Political
-Syrian Civil War,2011-03-15,Start of civil conflict adding to regional instability.,Conflict
-Oil Price Crash 2014,2014-06-20,Oversupply (shale boom) and weak demand cause prices to plummet.,Economic
-OPEC Production Cut,2016-11-30,OPEC agrees to cut production to stabilize prices.,Policy
-US Exits Iran Deal,2018-05-08,US withdraws from JCPOA and reimposes sanctions on Iran.,Political
-Saudi Aramco Drone Attack,2019-09-14,Attack on Abqaiq processing facility disrupts 5% of global supply.,Conflict
-Russia-Saudi Price War,2020-03-08,Breakdown in OPEC+ talks triggers price war amidst COVID onset.,Policy
-COVID-19 Pandemic,2020-03-11,WHO declares pandemic; lockdowns crush global fuel demand.,Pandemic
-Russia-Ukraine War,2022-02-24,Russia invades Ukraine; sanctions and supply fears spike prices.,Conflict
+Gulf War,1990-08-02,"Iraq invades Kuwait, triggering a sharp rise in oil prices.",Conflict
+Asian Financial Crisis,1997-07-02,"Thailand floats the baht, starting a crisis that reduced Asian demand for oil.",Economic
+9/11 Attacks,2001-09-11,"Terrorist attacks in the US causing global uncertainty and market volatility.",Terrorism
+Venezuelan Oil Strike,2002-12-02,"General strike in Venezuela halts oil exports.",Political
+US Invasion of Iraq,2003-03-20,"Start of the Iraq War, creating supply concerns.",Conflict
+Global Financial Crisis,2008-09-15,"Lehman Brothers bankruptcy; demand collapse leads to price crash.",Economic
+Arab Spring,2010-12-17,"Uprisings in North Africa and Middle East affect stability.",Political
+Syrian Civil War,2011-03-15,"Start of civil conflict adding to regional instability.",Conflict
+Oil Price Crash 2014,2014-06-20,"Oversupply (shale boom) and weak demand cause prices to plummet.",Economic
+OPEC Production Cut,2016-11-30,"OPEC agrees to cut production to stabilize prices.",Policy
+US Exits Iran Deal,2018-05-08,"US withdraws from JCPOA and reimposes sanctions on Iran.",Political
+Saudi Aramco Drone Attack,2019-09-14,"Attack on Abqaiq processing facility disrupts 5% of global supply.",Conflict
+Russia-Saudi Price War,2020-03-08,"Breakdown in OPEC+ talks triggers price war amidst COVID onset.",Policy
+COVID-19 Pandemic,2020-03-11,"WHO declares pandemic; lockdowns crush global fuel demand.",Pandemic
+Russia-Ukraine War,2022-02-24,"Russia invades Ukraine; sanctions and supply fears spike prices.",Conflict
