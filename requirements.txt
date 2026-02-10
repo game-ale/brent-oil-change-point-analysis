@@ -6,3 +6,4 @@ jupyter>=1.0.0
 pymc>=5.0.0
 arviz>=0.15.0
 flask>=2.0.0
+flask-cors>=4.0.0
