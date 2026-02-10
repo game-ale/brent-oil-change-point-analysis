@@ -43,13 +43,9 @@ The analysis follows a structured workflow:
 ```
 
 ## Current Status
--   [x] **Task 1: Foundation & EDA**
-    -   Workflow and Event Data compiled.
-    -   EDA completed (Trend, Volatility, Stationarity confirmed).
-    -   Interim Report generated.
-    -   **Code Improvement**: Modularized EDA script, added config, type hints, and unit tests.
--   [ ] **Task 2: Change Point Modeling** (In Progress)
--   [ ] **Task 3: Dashboard Development**
+- [x] **Task 1: Foundation & EDA** (Completed)
+- [x] **Task 2: Change Point Modeling** (Completed)
+- [x] **Task 3: Dashboard Development** (Completed)
 
 ## How to Run
 1.  **Environment Setup**:

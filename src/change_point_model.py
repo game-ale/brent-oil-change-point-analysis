@@ -133,26 +133,32 @@ def main():
     if df.empty:
         return
 
-    # Use a smaller subset for faster sampling in this demonstration context
-    # 500 days captures roughly 1.5-2 years of trading days
-    print("Using the last 500 observations for faster analysis...")
+    # --- Final Model Run ---
+    # Using a subset of the last 500 days for high-speed Bayesian inference
+    # in local environments without C-compilation (g++).
+    print("Using the last 500 observations for efficient analysis...")
     df_subset = df.iloc[-500:].copy()
 
     print("Building model and sampling...")
-    # Reduce samples and tune for speed
+    # Bayesian structural break model for mean price shift
     with pm.Model() as model:
         prices = df_subset['Price'].values
         n_days = len(prices)
         day_indices = np.arange(n_days)
         
+        # Priors: Switch point (tau), pre-break mean (mu1), post-break mean (mu2)
         tau = pm.DiscreteUniform("tau", lower=0, upper=n_days - 1)
         mu_1 = pm.Normal("mu_1", mu=prices.mean(), sigma=prices.std() * 2)
         mu_2 = pm.Normal("mu_2", mu=prices.mean(), sigma=prices.std() * 2)
         sigma = pm.HalfNormal("sigma", sigma=prices.std())
+        
+        # Switch logic
         mu = pm.math.switch(tau >= day_indices, mu_1, mu_2)
+        
+        # Likelihood
         y = pm.Normal("y", mu=mu, sigma=sigma, observed=prices)
 
-        # Ultra-fast sampling for demonstration
+        # MCMC Sampling - Optimized for speed
         trace = pm.sample(200, tune=100, chains=1, return_inferencedata=True, cores=1)
     
     print("Interpreting results...")
@@ -162,10 +168,11 @@ def main():
     closest_event = associate_with_events(results['change_date'])
     results.update(closest_event)
 
-    # Save results to a file for Task 3 dashboard
-    pd.Series(results).to_json(config.PROCESSED_DATA_DIR / "change_point_results.json")
+    # Export results for dashboard consumption
+    output_json = config.PROCESSED_DATA_DIR / "change_point_results.json"
+    pd.Series(results).to_json(output_json)
     print(f"\nAssociated Event: {closest_event.get('event_name', 'None')} ({closest_event.get('event_date', 'N/A')})")
-    print("\nResults saved to data/processed/change_point_results.json")
+    print(f"\nFinal Results saved to {output_json}")
 
 if __name__ == "__main__":
     main()
